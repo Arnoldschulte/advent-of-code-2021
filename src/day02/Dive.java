@@ -13,26 +13,17 @@ public class Dive {
 //      Part 01
         final List<String> courseLines = ReaderUtil.getLinesFromTextFile(INPUT_PATH);
 
-        int depth = 0;
-        int horizontalPosition = 0;
-
-        for (String courseLine : courseLines) {
-            int number = StringUtil.getIntegerFromString(courseLine);
-
-            if (courseLine.contains("forward")) {
-                horizontalPosition += number;
-            } else if (courseLine.contains("up")) {
-                depth -= number;
-            } else if (courseLine.contains("down")) {
-                depth += number;
-            }
-        }
-
-        System.out.println("Multiplication of depth and horizontal position: " + depth * horizontalPosition);
+        int result = getMultiplicationDepthAndHorizontalPosition(courseLines, false);
+        System.out.println("Multiplication of depth and horizontal position: " + result);
 
 //      Part 02
-        depth = 0;
-        horizontalPosition = 0;
+        result = getMultiplicationDepthAndHorizontalPosition(courseLines, true);
+        System.out.println("Multiplication of depth and horizontal position: " + result);
+    }
+
+    private static int getMultiplicationDepthAndHorizontalPosition(List<String> courseLines, boolean withAim) {
+        int depth = 0;
+        int horizontalPosition = 0;
         int aim = 0;
 
         for (String courseLine : courseLines) {
@@ -40,14 +31,29 @@ public class Dive {
 
             if (courseLine.contains("forward")) {
                 horizontalPosition += number;
-                depth += (number * aim);
+
+                if (withAim) {
+                    depth += (number * aim);
+                }
+
             } else if (courseLine.contains("up")) {
-                aim -= number;
+
+                if (withAim) {
+                    aim -= number;
+                } else {
+                    depth -= number;
+                }
+
             } else if (courseLine.contains("down")) {
-                aim += number;
+
+                if (withAim) {
+                    aim += number;
+                } else {
+                    depth += number;
+                }
             }
         }
-
-        System.out.println("Multiplication of depth and horizontal position: " + depth * horizontalPosition);
+        return depth * horizontalPosition;
     }
+
 }
