@@ -1,12 +1,17 @@
 package day01;
 
+import util.ReaderUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class SonarSweep {
+
+    private static final String INPUT_PATH = "src/day01/input.txt";
+
     public static void main(String[] args) {
 //      Part 01
-        final List<Integer> numbers = ReaderUtil.getLinesFromTextFile("src/day01/input.txt");
+        final List<Integer> numbers = ReaderUtil.getNumbersFromTextFile(INPUT_PATH);
         System.out.println("Number of depth measurement increments: " + getNumberOfIncrements(numbers));
 
 //      Part 02

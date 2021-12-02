@@ -1,4 +1,4 @@
-package day01;
+package util;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -13,11 +13,16 @@ public class ReaderUtil {
         // Encapsulation
     }
 
-    public static List<Integer> getLinesFromTextFile(String path) {
+    public static List<Integer> getNumbersFromTextFile(String path) {
+        return getLinesFromTextFile(path)
+                .stream()
+                .map(Integer::parseInt)
+                .collect(Collectors.toList());
+    }
+
+    public static List<String> getLinesFromTextFile(String path) {
         try (final BufferedReader bufferedReader = new BufferedReader(new FileReader(path))) {
-            return bufferedReader.lines()
-                    .map(Integer::parseInt)
-                    .collect(Collectors.toList());
+            return bufferedReader.lines().collect(Collectors.toList());
         } catch (IOException e) {
             System.out.println("The current error is occurred: " + e.getMessage());
 
