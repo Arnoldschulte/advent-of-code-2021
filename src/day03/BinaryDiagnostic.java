@@ -3,13 +3,17 @@ package day03;
 import util.ReaderUtil;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+import static util.BinaryUtil.*;
+
 public class BinaryDiagnostic {
+
+    private static final String INPUT_PATH = "src/day03/input.txt";
+
     public static void main(String[] args) {
 //      Part 01
-        final List<String> lines = ReaderUtil.getLinesFromTextFile("src/day03/input.txt");
+        final List<String> lines = ReaderUtil.getLinesFromTextFile(INPUT_PATH);
 
         final StringBuilder gammaRateBinary = new StringBuilder();
         final StringBuilder epsilonRateBinary = new StringBuilder();
@@ -24,62 +28,30 @@ public class BinaryDiagnostic {
         System.out.println("The power consumption of the submarine is: " + gammaRate * epsilonRate);
 
 //      Part 02
-        final String oxygenGeneratorRatingBinary = getOxygenGeneratorRating(lines);
-        final String co2ScrubberRatingBinary = getC02ScrubberRating(lines);
-
-        final int oxygenGeneratorRating = getDecimalFromBinary(oxygenGeneratorRatingBinary);
-        final int co2ScrubberRating = getDecimalFromBinary(co2ScrubberRatingBinary);
+        final int oxygenGeneratorRating = getOxygenGeneratorRatingBinary(lines);
+        final int co2ScrubberRating = getC02ScrubberRatingBinary(lines);
 
         System.out.println("The life support rating of the submarine is: " + oxygenGeneratorRating * co2ScrubberRating);
     }
 
-    private static int getDecimalFromBinary(String binary) {
-        return Integer.parseInt(binary, 2);
+    private static int getOxygenGeneratorRatingBinary(List<String> lines) {
+        return getRatingBinary(lines, true);
     }
 
-    private static String getMostCommonBinaryNumber(List<String> lines, int index) {
-        final List<Character> chars = new ArrayList<>();
-
-        for (String line : lines) {
-            chars.add(line.charAt(index));
-        }
-
-        return Collections.frequency(chars, '1') >= Collections.frequency(chars, '0') ? "1" : "0";
+    private static int getC02ScrubberRatingBinary(List<String> lines) {
+        return getRatingBinary(lines, false);
     }
 
-    private static String getLeastCommonBinaryNumber(List<String> lines, int index) {
-        final List<Character> chars = new ArrayList<>();
-
-        for (String line : lines) {
-            chars.add(line.charAt(index));
-        }
-
-        return Collections.frequency(chars, '1') >= Collections.frequency(chars, '0') ? "0" : "1";
-    }
-
-    private static String getOxygenGeneratorRating(List<String> lines) {
-        final List<String> oxygenGeneratorRatingList = new ArrayList<>(lines);
+    private static int getRatingBinary(List<String> lines, boolean mostCommonBinary) {
+        final List<String> filteredList = new ArrayList<>(lines);
 
         for (int i = 0; i < lines.get(0).length(); i++) {
-            final String number = getMostCommonBinaryNumber(oxygenGeneratorRatingList, i);
+            final String number = mostCommonBinary ? getMostCommonBinaryNumber(filteredList, i) : getLeastCommonBinaryNumber(filteredList, i);
 
             int index = i;
-            oxygenGeneratorRatingList.removeIf(s -> !String.valueOf(s.charAt(index)).equals(number) && oxygenGeneratorRatingList.size() > 1);
+            filteredList.removeIf(s -> !String.valueOf(s.charAt(index)).equals(number) && filteredList.size() > 1);
         }
 
-        return oxygenGeneratorRatingList.get(0);
-    }
-
-    private static String getC02ScrubberRating(List<String> lines) {
-        final List<String> co2ScrubberRatingList = new ArrayList<>(lines);
-
-        for (int i = 0; i < lines.get(0).length(); i++) {
-            final String number = getLeastCommonBinaryNumber(co2ScrubberRatingList, i);
-
-            int index = i;
-            co2ScrubberRatingList.removeIf(s -> !String.valueOf(s.charAt(index)).equals(number) && co2ScrubberRatingList.size() > 1);
-        }
-
-        return co2ScrubberRatingList.get(0);
+        return getDecimalFromBinary(filteredList.get(0));
     }
 }
